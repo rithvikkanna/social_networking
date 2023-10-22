@@ -23,4 +23,4 @@ def login_view(request):
         interactor = UserLoginInteractor(user_storage=storage, oauth2_storage=oauth2_storage)
         response = interactor.user_login_wrapper(email_id=email_id, password=password, user_presenter=presenter)
         return response
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response("The request is missing a required parameter.", status=status.HTTP_400_BAD_REQUEST)

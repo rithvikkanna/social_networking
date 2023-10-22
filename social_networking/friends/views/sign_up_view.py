@@ -24,4 +24,4 @@ def signup(request):
                                                   user_presenter=presenter)
         return response
 
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response("The request is missing a required parameter.", status=status.HTTP_400_BAD_REQUEST)

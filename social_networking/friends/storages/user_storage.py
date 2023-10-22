@@ -2,7 +2,7 @@ from friends.interactors.storage_interface.user_storage_interface import UserSto
 from friends.models import User
 from friends.interactors.dtos.user_dtos import UserDto, SearchUserResultDTO
 from django.contrib.auth.hashers import check_password
-
+from typing import List
 
 class UserStorageImplementation(UserStorageInterface):
     def validate_email_id(self, email_id: str):
@@ -52,3 +52,7 @@ class UserStorageImplementation(UserStorageInterface):
             UserDto(user_id=user_obj.user_id, name=user_obj.name, email_id=user_obj.email)
             for user_obj in user_objs]
         return user_dtos
+
+    def validate_user_ids(self, user_ids: List[str]):
+        user_objs = User.objects.filter(user_id__in=user_ids)
+        return self._convert_user_objects_into_user_dtos(user_objs)

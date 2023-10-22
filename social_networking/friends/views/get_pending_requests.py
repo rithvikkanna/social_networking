@@ -11,15 +11,17 @@ from oauth2_provider.contrib.rest_framework import OAuth2Authentication
 from friends.interactors.get_pending_friend_requests import GetPendingRequests
 from friends.storages.friends_storage import FriendsStorage
 from friends.presenters.friends_presenter_implementation import FriendsPresenterImplementation
+from rest_framework.permissions import IsAuthenticated
 
 
 @api_view(["GET"])
 @authentication_classes([OAuth2Authentication])
+@permission_classes([IsAuthenticated])
 def get_pending_requests(request):
     limit = request.GET.get('limit', 10)
     offset = request.GET.get('offset', 0)
 
-    user_id = request.user.id
+    user_id = request.user.user_id
     storage = FriendsStorage()
     user_storage = UserStorageImplementation()
     presenter = FriendsPresenterImplementation()

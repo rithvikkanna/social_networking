@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import List
 
 
 class UserStorageInterface(ABC):
@@ -19,4 +20,6 @@ class UserStorageInterface(ABC):
     def get_users_by_name(self, search_query: str, limit: int, offset: int):
         pass
 
-
+    @abstractmethod
+    def validate_user_ids(self, user_ids: List[str]):
+        pass

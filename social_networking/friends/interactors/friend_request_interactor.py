@@ -20,7 +20,9 @@ class FriendRequestInteractor(ValidationMixin):
 
         try:
             self.friend_request(friend_request_params=friend_request_params)
+            return None
         except InvalidUserID:
+
             response = user_presenter.raise_invalid_user_id_exception()
             return response
         except RequestAlreadySent:

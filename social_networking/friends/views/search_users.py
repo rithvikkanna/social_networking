@@ -8,12 +8,13 @@ from friends.interactors.search_users import SearchUsersInteractor
 from friends.storages.user_storage import UserStorageImplementation
 from friends.presenters.presenter_implementation import UserSignUpPresenterImplementation
 from oauth2_provider.contrib.rest_framework import OAuth2Authentication
+from rest_framework.permissions import IsAuthenticated
 
 
 @api_view(["GET"])
 @authentication_classes([OAuth2Authentication])
+@permission_classes([IsAuthenticated])
 def search_users(request):
-
     input_serializer = SearchQuerySerializer(data=request.GET)
 
     if input_serializer.is_valid():
@@ -29,5 +30,4 @@ def search_users(request):
         response = interactor.search_users_wrapper(
             search_query=search_key, limit=limit, offset=offset, user_presenter=presenter)
         return response
-    return Response(input_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    return Response("The request is missing a required parameter.", status=status.HTTP_400_BAD_REQUEST)

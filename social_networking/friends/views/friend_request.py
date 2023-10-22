@@ -13,10 +13,12 @@ from friends.storages.friends_storage import FriendsStorage
 from friends.presenters.friends_presenter_implementation import FriendsPresenterImplementation
 from friends.interactors.dtos.friends_dtos import FriendRequestParamsDTO
 from friends.presenters.presenter_implementation import UserSignUpPresenterImplementation
+from rest_framework.permissions import IsAuthenticated
 
 
 @api_view(["POST"])
 @authentication_classes([OAuth2Authentication])
+@permission_classes([IsAuthenticated])
 def friend_request(request):
     serializer = FriendRequestSerializer(data=request.data)
     if serializer.is_valid():
@@ -33,9 +35,10 @@ def friend_request(request):
         friends_presenter = FriendsPresenterImplementation()
         user_presenter = UserSignUpPresenterImplementation()
         interactor = FriendRequestInteractor(user_storage=user_storage, friends_storage=friend_storage)
-        interactor.friend_request_wrapper(friend_request_params=friend_request_params_dto,
+        response = interactor.friend_request_wrapper(friend_request_params=friend_request_params_dto,
                                           friends_presenter=friends_presenter, user_presenter=user_presenter)
-
+        if response:
+            return response
         return Response("Request Processed Successfully", status=status.HTTP_200_OK)
 
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response("The request is missing a required parameter.", status=status.HTTP_400_BAD_REQUEST)

@@ -11,15 +11,17 @@ from oauth2_provider.contrib.rest_framework import OAuth2Authentication
 from friends.interactors.get_friends_interactor import GetFriendsInteractor
 from friends.storages.friends_storage import FriendsStorage
 from friends.presenters.friends_presenter_implementation import FriendsPresenterImplementation
+from rest_framework.permissions import IsAuthenticated
 
 
 @api_view(["GET"])
 @authentication_classes([OAuth2Authentication])
+@permission_classes([IsAuthenticated])
 def get_friends(request):
     limit = request.GET.get('limit', 10)
     offset = request.GET.get('offset', 0)
 
-    user_id = request.user.id
+    user_id = request.user.user_id
     storage = FriendsStorage()
     user_storage = UserStorageImplementation()
     presenter = FriendsPresenterImplementation()
@@ -28,5 +30,5 @@ def get_friends(request):
 
     response = interactor.get_friends_wrapper(user_id=user_id, limit=limit, offset=offset, friends_presenter=presenter,
                                               user_presenter=user_presenter)
-    print(response)
+
     return response

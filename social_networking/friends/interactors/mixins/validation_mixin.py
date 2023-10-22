@@ -17,6 +17,8 @@ class ValidationMixin:
     @staticmethod
     def validate_user_ids(user_ids: List[str], user_storage):
         user_dtos = user_storage.validate_user_ids(user_ids=user_ids)
-        if len(user_ids != user_dtos):
+
+        if len(user_ids) != len(user_dtos):
+
             raise InvalidUserID
 
